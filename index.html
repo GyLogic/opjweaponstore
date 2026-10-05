@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tactical Armory - POS & Inventory System (USD)</title>
+  <title>OPJ Weapon Store</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Fonts -->
@@ -49,7 +49,7 @@
           </div>
           <div>
             <div class="flex items-center gap-2">
-              <h1 class="font-bold text-base md:text-lg text-slate-100 tracking-wide">TACTICAL ARMORY</h1>
+              <h1 class="font-bold text-base md:text-lg text-slate-100 tracking-wide">OPJ WEAPON STORE</h1>
               <span class="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded font-mono font-semibold">USD ($)</span>
               <!-- Role Badge -->
               <span id="headerRoleBadge" class="text-[10px] bg-slate-800 text-slate-300 border border-slate-700 px-2 py-0.5 rounded font-semibold uppercase tracking-wider flex items-center gap-1">
@@ -62,7 +62,7 @@
                 <span>Menghubungkan...</span>
               </span>
             </div>
-            <p class="text-xs text-slate-400">Verifikasi Bertahap &bull; Multi-Item &bull; Backups Kompatibel</p>
+            <p class="text-xs text-slate-400">&bull; PENCATATAN PEMASUKAN & PENJUALAN &bull;</p>
           </div>
         </div>
 
@@ -226,7 +226,7 @@
           </div>
           <div>
             <label class="block text-xs font-medium text-slate-300 mb-1">
-              <span id="lblCustomerName">Nama Pembeli / Regu</span> <span class="text-slate-500">(Opsional)</span>
+              <span id="lblCustomerName">Nama Pembeli</span> <span class="text-slate-500">(Wajib Diisi)</span>
             </label>
             <input type="text" id="txCustomer" placeholder="Contoh: Alpha Squad / John" class="w-full bg-[#18231c] border border-emerald-900/70 rounded-lg px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500">
           </div>
@@ -406,7 +406,7 @@
             <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             Riwayat Log Mutasi &amp; Jual Beli
           </h2>
-          <p class="text-[11px] text-slate-400">Alur verifikasi penjualan: Menunggu Bayar &rarr; Sudah Bayar &rarr; Sudah Diberikan (Stok &amp; Valuasi Berkurang)</p>
+          <p class="text-[11px] text-slate-400">Alur verifikasi penjualan: Input Data &rarr; Menunggu Bayar &rarr; Sudah Bayar &rarr; Menunggu Diberikan &rarr; Sudah Diberikan &rarr; Transaksi Selesai</p>
         </div>
         <div class="flex items-center gap-2 no-print">
           <button id="btnClearAllHistory" class="text-xs px-2.5 py-1 rounded bg-slate-800 hover:bg-rose-950/60 text-slate-400 hover:text-rose-400 border border-slate-700 hover:border-rose-900 transition hidden">
