@@ -1,0 +1,50 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Hanya akun admin (login lewat Firebase Authentication)
+    function isAdmin() {
+      return request.auth != null
+          && request.auth.token.email == 'admin@tactical-armory.app';
+    }
+
+    // Katalog barang: semua orang boleh lihat, hanya admin yang boleh ubah
+    match /items/{itemId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Catatan serah kas: semua orang boleh lihat, hanya admin yang boleh ubah
+    match /handovers/{handoverId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Transaksi:
+    //  - semua orang boleh lihat
+    //  - user biasa HANYA boleh membuat order penjualan baru berstatus PENDING
+    //  - hanya admin yang boleh verifikasi / edit / hapus / restock
+    match /transactions/{txId} {
+      allow read: if true;
+
+      allow create: if isAdmin() || (
+        request.resource.data.keys().hasOnly(
+          ['id', 'timestamp', 'type', 'status', 'customer', 'items', 'totalUnits', 'grandTotal']
+        )
+        && request.resource.data.id == txId
+        && request.resource.data.type == 'OUT'
+        && request.resource.data.status == 'PENDING'
+        && request.resource.data.customer is string
+        && request.resource.data.customer.size() <= 80
+        && request.resource.data.items is list
+        && request.resource.data.items.size() > 0
+        && request.resource.data.items.size() <= 40
+        && request.resource.data.totalUnits is number
+        && request.resource.data.grandTotal is number
+        && request.resource.data.grandTotal >= 0
+      );
+
+      allow update, delete: if isAdmin();
+    }
+  }
+}
