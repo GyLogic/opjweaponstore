@@ -718,7 +718,7 @@
       { id: "wpn_micro_smg", name: "Micro SMG", category: "Senjata", price: 31000, initialStock: 5 },
       { id: "wpn_mini_smg", name: "Mini SMG", category: "Senjata", price: 31000, initialStock: 11 },
       { id: "wpn_ceramic", name: "Ceramic", category: "Senjata", price: 27000, initialStock: 1 },
-      { id: "wpn_ak", name: "AK", category: "Senjata", price: 197000, initialStock: 0 },
+      { id: "wpn_ak", name: "AK / Assault Rifle", category: "Senjata", price: 197000, initialStock: 0 },
       { id: "wpn_x17", name: "X17", category: "Senjata", price: 34000, initialStock: 1 },
       { id: "wpn_kvr", name: "Vektor KVR", category: "Senjata", price: 79000, initialStock: 0 },
       { id: "wpn_virtus", name: "Virtus", category: "Senjata", price: 223000, initialStock: 0 },
@@ -759,6 +759,7 @@
       wpn_p50:  { from: "P.50",      to: "Pistol 50" },
       wpn_x17:  { from: "Auto X17",  to: "X17" },
       wpn_kvr:  { from: "KVR",       to: "Vektor KVR" },
+      wpn_ak:   { from: "AK",        to: "AK / Assault Rifle" },
       amo_rifle_carbine: { from: "Ammo Rifle .56mm carbine", to: "Ammo Rifle Carbine" }
     };
     function fixItemName(id, name) {
@@ -770,7 +771,7 @@
     const AMMO_COMPAT = {
       "pistol 50": ["amo_p50"],
       "carbine":   ["amo_rifle_carbine"],
-      "ak":        ["amo_rifle_ak"],
+      "ak / assault rifle": ["amo_rifle_ak"],
       "kaviar":    ["amo_45acp"],
       "micro smg": ["amo_9mm"],
       "mini smg":  ["amo_9mm"]
@@ -834,7 +835,7 @@
       "smg":            ["att_smg_drum", "att_suppressor", "att_tactical_flashlight", "att_macro_scope"],
       "shotgun":        ["att_tactical_suppressor", "att_tactical_flashlight"],
       "carbine":        ["att_ext_rifle", "att_rifle_drum", "att_med_scope", "att_grip", "att_tactical_suppressor"],
-      "ak":             ["att_tactical_flashlight", "att_grip", "att_rifle_drum", "att_ext_rifle", "att_macro_scope", "att_tactical_suppressor"],
+      "ak / assault rifle": ["att_tactical_flashlight", "att_grip", "att_rifle_drum", "att_ext_rifle", "att_macro_scope", "att_tactical_suppressor"],
       "ceramic":        ["att_ext_pistol", "att_suppressor"],
       "virtus":         ["att_ext_rifle", "att_tactical_suppressor", "att_tactical_flashlight", "att_med_scope"]
     };
