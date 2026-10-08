@@ -295,13 +295,13 @@
         <div id="attachSuggestPanel" class="hidden border border-cyan-700/50 bg-cyan-950/20 p-3.5 rounded-xl space-y-2.5">
           <div class="flex items-start justify-between gap-2">
             <div>
-              <p class="text-xs font-bold text-cyan-300 uppercase tracking-wider">Sekalian Attachment? <span class="text-slate-500 font-normal normal-case">(opsional)</span></p>
-              <p class="text-[11px] text-slate-400">Attachment yang compatible dengan <span id="attachSuggestWeapon" class="text-slate-200 font-semibold"></span></p>
+              <p class="text-xs font-bold text-cyan-300 uppercase tracking-wider">Sekalian Attachment &amp; Ammo? <span class="text-slate-500 font-normal normal-case">(opsional)</span></p>
+              <p class="text-[11px] text-slate-400">Attachment &amp; ammo yang cocok dengan <span id="attachSuggestWeapon" class="text-slate-200 font-semibold"></span></p>
             </div>
             <button type="button" id="btnAttachSkip" class="text-[11px] px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 shrink-0 transition">Lewati</button>
           </div>
           <div id="attachSuggestList" class="space-y-1.5"></div>
-          <button type="button" id="btnAttachAdd" class="w-full py-1.5 px-3 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-xs font-semibold transition shadow-sm disabled:bg-slate-800 disabled:text-slate-500 disabled:cursor-not-allowed">Tambahkan Attachment Terpilih</button>
+          <button type="button" id="btnAttachAdd" class="w-full py-1.5 px-3 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-xs font-semibold transition shadow-sm disabled:bg-slate-800 disabled:text-slate-500 disabled:cursor-not-allowed">Tambahkan Terpilih</button>
         </div>
 
         <!-- ORDER CART TABLE / ITEM LIST -->
@@ -747,8 +747,8 @@
       { id: "amo_9mm", name: "Ammo 9mm", category: "Ammo", price: 4000, initialStock: 170 },
       { id: "amo_sg", name: "Ammo SG", category: "Ammo", price: 6700, initialStock: 0 },
       { id: "amo_magnum", name: "Ammo .44 Magnum", category: "Ammo", price: 5500, initialStock: 0 },
-      { id: "amo_rifle_ak", name: "Ammo Rifle Carbine", category: "Ammo", price: 6700, initialStock: 80 },
-      { id: "amo_rifle_carbine", name: "Ammo Rifle AK", category: "Ammo", price: 6700, initialStock: 0 },
+      { id: "amo_rifle_ak", name: "Ammo Rifle AK", category: "Ammo", price: 6700, initialStock: 0, ammoFixed: true },
+      { id: "amo_rifle_carbine", name: "Ammo Rifle Carbine", category: "Ammo", price: 6700, initialStock: 80, ammoFixed: true },
       { id: "amo_45acp", name: "Ammo .45 ACP", category: "Ammo", price: 5500, initialStock: 38 }
     ];
 
@@ -758,11 +758,59 @@
     const LEGACY_NAME_MAP = {
       wpn_p50:  { from: "P.50",      to: "Pistol 50" },
       wpn_x17:  { from: "Auto X17",  to: "X17" },
-      wpn_kvr:  { from: "KVR",       to: "Vektor KVR" }
+      wpn_kvr:  { from: "KVR",       to: "Vektor KVR" },
+      amo_rifle_carbine: { from: "Ammo Rifle .56mm carbine", to: "Ammo Rifle Carbine" }
     };
     function fixItemName(id, name) {
       const m = LEGACY_NAME_MAP[id];
       return (m && name === m.from) ? m.to : name;
+    }
+
+    // Ammo yang cocok per senjata (kunci = nama senjata huruf kecil, isi = ID ammo)
+    const AMMO_COMPAT = {
+      "pistol 50": ["amo_p50"],
+      "carbine":   ["amo_rifle_carbine"],
+      "ak":        ["amo_rifle_ak"],
+      "kaviar":    ["amo_45acp"],
+      "micro smg": ["amo_9mm"],
+      "mini smg":  ["amo_9mm"]
+    };
+
+    /* ---------------------------------------------------------------------
+       KOREKSI DATA: Ammo Rifle AK <-> Ammo Rifle Carbine sebelumnya tertukar.
+       Dijalankan di memori saat data dimuat. Setiap dokumen yang sudah dikoreksi
+       diberi tanda ammoFixed:true, jadi tidak akan pernah ditukar dua kali.
+       Transaksi baru otomatis bertanda ammoFixed:true.
+       --------------------------------------------------------------------- */
+    const AMMO_AK_ID = "amo_rifle_ak";
+    const AMMO_CB_ID = "amo_rifle_carbine";
+    const AMMO_NAMES = { [AMMO_AK_ID]: "Ammo Rifle AK", [AMMO_CB_ID]: "Ammo Rifle Carbine" };
+
+    function applyAmmoFix(col, arr) {
+      if (col === "items") {
+        const ak = arr.find(x => x.id === AMMO_AK_ID);
+        const cb = arr.find(x => x.id === AMMO_CB_ID);
+        if (ak && cb && (!ak.ammoFixed || !cb.ammoFixed)) {
+          const tmp = ak.initialStock || 0;
+          ak.initialStock = cb.initialStock || 0;
+          cb.initialStock = tmp;
+          ak.ammoFixed = true;
+          cb.ammoFixed = true;
+        }
+        if (cb && cb.name === "Ammo Rifle .56mm carbine") cb.name = AMMO_NAMES[AMMO_CB_ID];
+      } else if (col === "transactions") {
+        arr.forEach(tx => {
+          if (tx.ammoFixed) return;
+          if (Array.isArray(tx.items)) {
+            tx.items.forEach(line => {
+              if (line.itemId === AMMO_AK_ID) { line.itemId = AMMO_CB_ID; line.itemName = AMMO_NAMES[AMMO_CB_ID]; }
+              else if (line.itemId === AMMO_CB_ID) { line.itemId = AMMO_AK_ID; line.itemName = AMMO_NAMES[AMMO_AK_ID]; }
+            });
+          }
+          tx.ammoFixed = true;
+        });
+      }
+      return arr;
     }
 
     // Attachment yang compatible per senjata (kunci = nama senjata huruf kecil, isi = ID attachment)
@@ -1208,6 +1256,13 @@
       return ids.map(id => snapshot[id]).filter(Boolean);
     }
 
+    function getCompatibleAmmo(weapon) {
+      const snapshot = calculateStockSnapshot();
+      const key = fixItemName(weapon.id, weapon.name).trim().toLowerCase();
+      const ids = AMMO_COMPAT[key] || [];
+      return ids.map(id => snapshot[id]).filter(Boolean);
+    }
+
     function attachAvailable(att) {
       const inCart = state.cart.filter(c => c.itemId === att.id).reduce((sum, c) => sum + c.qty, 0);
       return Math.max(0, att.currentStock - inCart);
@@ -1219,9 +1274,35 @@
       if (panel) panel.classList.add("hidden");
     }
 
+    function buildSuggestRow(att, qty) {
+      const avail = attachAvailable(att);
+      const out = avail <= 0;
+      const row = document.createElement("label");
+      row.className = "flex items-center gap-2 px-2.5 py-1.5 rounded-lg border text-xs transition " +
+        (out ? "bg-black/20 border-slate-800 opacity-50 cursor-not-allowed" : "bg-[#18231c] border-emerald-900/60 hover:border-cyan-600/70 cursor-pointer");
+      row.innerHTML = `
+        <input type="checkbox" class="attach-check accent-cyan-500" data-id="${att.id}" ${out ? "disabled" : ""}>
+        <span class="flex-1 min-w-0">
+          <span class="text-slate-200 font-medium">${escapeHtml(att.name)}</span>
+          <span class="block text-[10px] font-mono ${out ? "text-rose-400" : "text-slate-500"}">${out ? "HABIS" : "Stok: " + avail}</span>
+        </span>
+        <span class="font-mono text-emerald-400 font-semibold">${formatUSD(att.price)}</span>
+        <input type="number" min="1" max="${avail}" value="${Math.min(qty, Math.max(avail, 1))}" data-id="${att.id}" disabled
+          class="attach-qty w-14 bg-black/30 border border-emerald-900/70 rounded px-1.5 py-1 text-xs font-mono text-center text-slate-100 focus:outline-none focus:border-cyan-500 disabled:opacity-40">
+      `;
+      const chk = row.querySelector(".attach-check");
+      const qtyInput = row.querySelector(".attach-qty");
+      chk.addEventListener("change", () => {
+        qtyInput.disabled = !chk.checked;
+        updateAttachAddButton();
+      });
+      return row;
+    }
+
     function showAttachmentSuggestion(weapon, qty) {
-      const list = getCompatibleAttachments(weapon);
-      if (list.length === 0) { hideAttachmentSuggestion(); return; }
+      const attList = getCompatibleAttachments(weapon);
+      const ammoList = getCompatibleAmmo(weapon);
+      if (attList.length === 0 && ammoList.length === 0) { hideAttachmentSuggestion(); return; }
 
       state.attachPrompt = { weaponId: weapon.id, weaponName: fixItemName(weapon.id, weapon.name), qty: qty };
       document.getElementById("attachSuggestWeapon").textContent = state.attachPrompt.weaponName;
@@ -1229,30 +1310,16 @@
       const box = document.getElementById("attachSuggestList");
       box.innerHTML = "";
 
-      list.forEach(att => {
-        const avail = attachAvailable(att);
-        const out = avail <= 0;
-        const row = document.createElement("label");
-        row.className = "flex items-center gap-2 px-2.5 py-1.5 rounded-lg border text-xs transition " +
-          (out ? "bg-black/20 border-slate-800 opacity-50 cursor-not-allowed" : "bg-[#18231c] border-emerald-900/60 hover:border-cyan-600/70 cursor-pointer");
-        row.innerHTML = `
-          <input type="checkbox" class="attach-check accent-cyan-500" data-id="${att.id}" ${out ? "disabled" : ""}>
-          <span class="flex-1 min-w-0">
-            <span class="text-slate-200 font-medium">${escapeHtml(att.name)}</span>
-            <span class="block text-[10px] font-mono ${out ? "text-rose-400" : "text-slate-500"}">${out ? "HABIS" : "Stok: " + avail}</span>
-          </span>
-          <span class="font-mono text-emerald-400 font-semibold">${formatUSD(att.price)}</span>
-          <input type="number" min="1" max="${avail}" value="${Math.min(qty, Math.max(avail, 1))}" data-id="${att.id}" disabled
-            class="attach-qty w-14 bg-black/30 border border-emerald-900/70 rounded px-1.5 py-1 text-xs font-mono text-center text-slate-100 focus:outline-none focus:border-cyan-500 disabled:opacity-40">
-        `;
-        const chk = row.querySelector(".attach-check");
-        const qtyInput = row.querySelector(".attach-qty");
-        chk.addEventListener("change", () => {
-          qtyInput.disabled = !chk.checked;
-          updateAttachAddButton();
-        });
-        box.appendChild(row);
-      });
+      const addGroup = (title, list) => {
+        if (list.length === 0) return;
+        const h = document.createElement("div");
+        h.className = "text-[10px] font-bold text-slate-400 uppercase tracking-wider pt-1";
+        h.textContent = title;
+        box.appendChild(h);
+        list.forEach(it => box.appendChild(buildSuggestRow(it, qty)));
+      };
+      addGroup("Attachment", attList);
+      addGroup("Ammo", ammoList);
 
       updateAttachAddButton();
       document.getElementById("attachSuggestPanel").classList.remove("hidden");
@@ -1262,7 +1329,7 @@
       const n = document.querySelectorAll("#attachSuggestList .attach-check:checked").length;
       const btn = document.getElementById("btnAttachAdd");
       btn.disabled = n === 0;
-      btn.textContent = n === 0 ? "Pilih attachment di atas" : `Tambahkan ${n} Attachment ke Faktur`;
+      btn.textContent = n === 0 ? "Pilih item di atas" : `Tambahkan ${n} Item ke Faktur`;
     }
 
     function addSelectedAttachments() {
@@ -1302,7 +1369,7 @@
         showFeedback("Sebagian tidak ditambahkan -> " + errors.join("; "), false);
         if (added === 0) return;
       } else {
-        showFeedback(`${added} attachment berhasil ditambahkan ke faktur.`, true);
+        showFeedback(`${added} item (attachment/ammo) berhasil ditambahkan ke faktur.`, true);
       }
 
       hideAttachmentSuggestion();
@@ -1448,7 +1515,8 @@
         customer: customerInput || (state.currentMode === "OUT" ? "Customer Umum" : "Restock Gudang"),
         items: JSON.parse(JSON.stringify(state.cart)),
         totalUnits: totalUnits,
-        grandTotal: grandTotal
+        grandTotal: grandTotal,
+        ammoFixed: true
       };
 
       state.transactions.push(invoice);
@@ -2302,6 +2370,11 @@
         map.set(o.id, stableStringify(o));
         arr.push(o);
       });
+      if (col === "items" || col === "transactions") {
+        applyAmmoFix(col, arr);
+        // cache disamakan dengan data terkoreksi agar tidak dianggap perubahan oleh saveToCloud
+        arr.forEach(o => map.set(o.id, stableStringify(o)));
+      }
       if (col === "items") arr = orderItems(arr);
 
       cloud.cache[col] = map;
@@ -2480,6 +2553,8 @@
               if (Array.isArray(parsed.handovers)) state.handovers = parsed.handovers;
               state.items = state.items.map(x => sanitizeDocId(x, "itm"));
               state.transactions = state.transactions.map(x => sanitizeDocId(x, "INV"));
+              applyAmmoFix("items", state.items);
+              applyAmmoFix("transactions", state.transactions);
               state.handovers = state.handovers.map(x => sanitizeDocId(x, "KAS"));
               state.cart = [];
 
