@@ -778,29 +778,39 @@
 
     /* ---------------------------------------------------------------------
        KOREKSI DATA: Ammo Rifle AK <-> Ammo Rifle Carbine sebelumnya tertukar.
-       Dijalankan di memori saat data dimuat. Setiap dokumen yang sudah dikoreksi
-       diberi tanda ammoFixed:true, jadi tidak akan pernah ditukar dua kali.
-       Transaksi baru otomatis bertanda ammoFixed:true.
+       Dijalankan di memori saat data dimuat (tidak menulis apa pun ke database).
+       - Transaksi: hanya faktur yang dibuat SEBELUM AMMO_FIX_CUTOFF (waktunya dibaca dari ID faktur)
+         dan belum bertanda ammoFixed yang ditukar. Faktur baru dari user biasa tidak perlu field tambahan.
+       - Item: stok awal diatur ke nilai yang benar jika belum bertanda ammoFixed.
+       Tanda ammoFixed hanya ikut tersimpan bila admin menyimpan/edit dokumen tersebut.
        --------------------------------------------------------------------- */
     const AMMO_AK_ID = "amo_rifle_ak";
     const AMMO_CB_ID = "amo_rifle_carbine";
     const AMMO_NAMES = { [AMMO_AK_ID]: "Ammo Rifle AK", [AMMO_CB_ID]: "Ammo Rifle Carbine" };
+    const AMMO_FIXED_INITIAL = { [AMMO_AK_ID]: 0, [AMMO_CB_ID]: 80 }; // stok awal setelah ditukar
+    const AMMO_FIX_CUTOFF = 1791450509696; // 08 Okt 2026 ~09:08 UTC; faktur setelah ini sudah memakai ammo yang benar
+
+    function invoiceCreatedMs(tx) {
+      const m = /^INV-([0-9A-Z]+)$/i.exec(String(tx.id || ""));
+      if (!m) return 0; // ID tidak dikenal -> anggap data lama
+      const ms = parseInt(m[1], 36);
+      return isNaN(ms) ? 0 : ms;
+    }
 
     function applyAmmoFix(col, arr) {
       if (col === "items") {
-        const ak = arr.find(x => x.id === AMMO_AK_ID);
-        const cb = arr.find(x => x.id === AMMO_CB_ID);
-        if (ak && cb && (!ak.ammoFixed || !cb.ammoFixed)) {
-          const tmp = ak.initialStock || 0;
-          ak.initialStock = cb.initialStock || 0;
-          cb.initialStock = tmp;
-          ak.ammoFixed = true;
-          cb.ammoFixed = true;
-        }
-        if (cb && cb.name === "Ammo Rifle .56mm carbine") cb.name = AMMO_NAMES[AMMO_CB_ID];
+        arr.forEach(it => {
+          if (it.id !== AMMO_AK_ID && it.id !== AMMO_CB_ID) return;
+          if (!it.ammoFixed) {
+            it.initialStock = AMMO_FIXED_INITIAL[it.id];
+            it.ammoFixed = true;
+          }
+          if (it.id === AMMO_CB_ID && it.name === "Ammo Rifle .56mm carbine") it.name = AMMO_NAMES[AMMO_CB_ID];
+        });
       } else if (col === "transactions") {
         arr.forEach(tx => {
           if (tx.ammoFixed) return;
+          if (invoiceCreatedMs(tx) >= AMMO_FIX_CUTOFF) return; // faktur baru: sudah benar
           if (Array.isArray(tx.items)) {
             tx.items.forEach(line => {
               if (line.itemId === AMMO_AK_ID) { line.itemId = AMMO_CB_ID; line.itemName = AMMO_NAMES[AMMO_CB_ID]; }
@@ -1515,8 +1525,7 @@
         customer: customerInput || (state.currentMode === "OUT" ? "Customer Umum" : "Restock Gudang"),
         items: JSON.parse(JSON.stringify(state.cart)),
         totalUnits: totalUnits,
-        grandTotal: grandTotal,
-        ammoFixed: true
+        grandTotal: grandTotal
       };
 
       state.transactions.push(invoice);
