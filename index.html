@@ -137,7 +137,7 @@
     </div>
 
     <!-- KPI Metric Cards (USD Currency) -->
-    <div id="kpiGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div id="kpiGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       
       <!-- Total Valuasi Aset (Admin Only) -->
       <div id="cardValuationWrap" class="hidden bg-[#121914] border border-emerald-900/40 rounded-xl p-4 shadow group hover:border-emerald-700/50 transition relative overflow-hidden">
@@ -171,8 +171,8 @@
       <div id="cardRevenueClickable" role="button" tabindex="0" title="Klik untuk melihat detail kas penjualan" class="bg-[#121914] border border-emerald-900/40 rounded-xl p-4 shadow group hover:border-amber-500/60 hover:bg-[#161f18] cursor-pointer transition">
         <div class="flex justify-between items-start">
           <div>
-            <p class="text-xs uppercase tracking-wider text-amber-400 font-semibold">Total Penjualan</p>
-            <h3 id="cardTotalOutflowVal" class="text-2xl font-bold font-mono text-amber-400 mt-1">$0.00</h3>
+            <p class="text-xs uppercase tracking-wider text-amber-400 font-semibold">Saldo Kas</p>
+            <h3 id="cardCashBalanceBig" class="text-2xl font-bold font-mono text-amber-400 mt-1">$0.00</h3>
           </div>
           <span class="p-2 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -180,7 +180,7 @@
         </div>
         <p id="cardTotalOutflow" class="text-[11px] text-slate-400 mt-2 font-mono">0 Unit Telah Diserahkan</p>
         <p class="text-[11px] mt-1 font-mono flex items-center justify-between gap-2">
-          <span id="cardCashBalanceMini" class="text-amber-300/90">Saldo kas: $0.00</span>
+          <span id="cardSalesMini" class="text-amber-300/90">Total penjualan: $0.00</span>
           <span class="text-slate-500 group-hover:text-amber-400 transition">Klik untuk detail &rsaquo;</span>
         </p>
       </div>
@@ -197,6 +197,21 @@
           </span>
         </div>
         <p id="cardTotalInflowVal" class="text-[11px] text-emerald-500/80 mt-2 font-mono">Restock: $0.00</p>
+      </div>
+
+      <!-- Pre Order (stok kosong / kurang, menunggu restock) -->
+      <div class="bg-[#121914] border border-orange-900/40 rounded-xl p-4 shadow group hover:border-orange-600/50 transition">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-xs uppercase tracking-wider text-orange-400 font-semibold">Pre Order</p>
+            <h3 id="cardPreorderUnits" class="text-2xl font-bold font-mono text-orange-400 mt-1">0 Unit</h3>
+          </div>
+          <span class="p-2 rounded-lg bg-orange-500/10 text-orange-400 border border-orange-500/20">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </span>
+        </div>
+        <p id="cardPreorderSub" class="text-[11px] text-slate-400 mt-2 font-mono">0 order menunggu stok</p>
+        <p id="cardPreorderItems" class="text-[10px] text-orange-300/80 mt-1 font-mono">Tidak ada pre order</p>
       </div>
     </div>
 
@@ -333,11 +348,11 @@
         </div>
 
         <!-- Strict Stock Warning Banner -->
-        <div id="strictStockAlert" class="hidden p-3 rounded-lg bg-rose-950/90 border border-rose-700/80 text-rose-200 text-xs flex items-start gap-2 shadow-lg">
-          <svg class="w-4 h-4 text-rose-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+        <div id="strictStockAlert" class="hidden p-3 rounded-lg bg-orange-950/70 border border-orange-700/70 text-orange-200 text-xs flex items-start gap-2 shadow-lg">
+          <svg class="w-4 h-4 text-orange-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
           <div class="space-y-0.5">
-            <p class="font-bold text-rose-300">Transaksi Tidak Dapat Dilanjutkan!</p>
-            <p id="strictStockAlertDesc">Ada barang dalam daftar dengan kuantiti melebihi stok yang tersedia.</p>
+            <p id="strictStockAlertTitle" class="font-bold text-orange-300">Termasuk PRE ORDER</p>
+            <p id="strictStockAlertDesc">Ada barang dengan stok kosong / kurang.</p>
           </div>
         </div>
 
@@ -713,7 +728,7 @@
       { id: "wpn_socil", name: "Socil", category: "Senjata", price: 50000, initialStock: 0, tag: "ON SALE" },
       { id: "wpn_machine_pistol", name: "Machine Pistol", category: "Senjata", price: 27000, initialStock: 0 },
       { id: "wpn_p50", name: "Pistol 50", category: "Senjata", price: 10000, initialStock: 0 },
-      { id: "wpn_shotgun", name: "Shotgun", category: "Senjata", price: 66000, initialStock: 0 },
+      { id: "wpn_shotgun", name: "Pump Shotgun", category: "Senjata", price: 66000, initialStock: 0 },
       { id: "wpn_navy", name: "Navy", category: "Senjata", price: 73000, initialStock: 0 },
       { id: "wpn_micro_smg", name: "Micro SMG", category: "Senjata", price: 31000, initialStock: 5 },
       { id: "wpn_mini_smg", name: "Mini SMG", category: "Senjata", price: 31000, initialStock: 11 },
@@ -760,6 +775,7 @@
       wpn_x17:  { from: "Auto X17",  to: "X17" },
       wpn_kvr:  { from: "KVR",       to: "Vektor KVR" },
       wpn_ak:   { from: "AK",        to: "AK / Assault Rifle" },
+      wpn_shotgun: { from: "Shotgun", to: "Pump Shotgun" },
       amo_rifle_carbine: { from: "Ammo Rifle .56mm carbine", to: "Ammo Rifle Carbine" }
     };
     function fixItemName(id, name) {
@@ -769,13 +785,32 @@
 
     // Ammo yang cocok per senjata (kunci = nama senjata huruf kecil, isi = ID ammo)
     const AMMO_COMPAT = {
-      "pistol 50": ["amo_p50"],
-      "carbine":   ["amo_rifle_carbine"],
+      "machine pistol":     ["amo_9mm"],
+      "mini smg":           ["amo_9mm"],
+      "micro smg":          ["amo_9mm"],
+      "pump shotgun":       ["amo_sg"],
+      "pistol 50":          ["amo_p50"],
+      "virtus":             ["amo_rifle_ak"],
       "ak / assault rifle": ["amo_rifle_ak"],
-      "kaviar":    ["amo_45acp"],
-      "micro smg": ["amo_9mm"],
-      "mini smg":  ["amo_9mm"]
+      "carbine":            ["amo_rifle_carbine"],
+      "navy":               ["amo_magnum"],
+      "revolver black":     ["amo_magnum"],
+      "vektor kvr":         ["amo_45acp"]
     };
+
+    // Keterangan "untuk senjata apa" pada setiap ammo
+    const AMMO_USAGE = {
+      amo_9mm:           "Machine Pistol, Mini SMG, Micro SMG",
+      amo_sg:            "Pump Shotgun",
+      amo_p50:           "Pistol 50",
+      amo_rifle_ak:      "Virtus, AK",
+      amo_rifle_carbine: "Carbine",
+      amo_magnum:        "Navy, Revolver Black",
+      amo_45acp:         "Vektor KVR"
+    };
+    function ammoNote(id) {
+      return AMMO_USAGE[id] ? "untuk " + AMMO_USAGE[id] : "";
+    }
 
     /* ---------------------------------------------------------------------
        KOREKSI DATA: Ammo Rifle AK <-> Ammo Rifle Carbine sebelumnya tertukar.
@@ -833,7 +868,7 @@
       "mini smg":       ["att_ext_smg"],
       "micro smg":      ["att_tactical_suppressor", "att_tactical_flashlight", "att_ext_smg", "att_macro_scope"],
       "smg":            ["att_smg_drum", "att_suppressor", "att_tactical_flashlight", "att_macro_scope"],
-      "shotgun":        ["att_tactical_suppressor", "att_tactical_flashlight"],
+      "pump shotgun":   ["att_tactical_suppressor", "att_tactical_flashlight"],
       "carbine":        ["att_ext_rifle", "att_rifle_drum", "att_med_scope", "att_grip", "att_tactical_suppressor"],
       "ak / assault rifle": ["att_tactical_flashlight", "att_grip", "att_rifle_drum", "att_ext_rifle", "att_macro_scope", "att_tactical_suppressor"],
       "ceramic":        ["att_ext_pistol", "att_suppressor"],
@@ -925,6 +960,67 @@
     }
 
     /* =========================================================================
+       PRE ORDER
+       Dihitung otomatis dari faktur penjualan yang belum diserahkan (PENDING / PAID).
+       Stok gudang dialokasikan ke faktur yang lebih dulu masuk; bagian yang tidak
+       kebagian stok dihitung sebagai PRE ORDER. Tidak ada field tambahan di database,
+       dan otomatis berkurang begitu ada restock.
+       ========================================================================= */
+    function computePreorderInfo() {
+      const snapshot = calculateStockSnapshot();
+      const remaining = {};
+      Object.values(snapshot).forEach(i => { remaining[i.id] = Math.max(0, i.currentStock); });
+
+      const outstanding = state.transactions
+        .map((tx, idx) => ({ tx, idx }))
+        .filter(o => o.tx.type === "OUT" && (o.tx.status === "PENDING" || o.tx.status === "PAID"))
+        .sort((a, b) => {
+          const ta = new Date(a.tx.timestamp).getTime() || 0;
+          const tb = new Date(b.tx.timestamp).getTime() || 0;
+          return (ta - tb) || (a.idx - b.idx);
+        });
+
+      const byInvoice = {};
+      const byItem = {};
+      let unitCount = 0;
+      let value = 0;
+
+      outstanding.forEach(({ tx }) => {
+        const shortages = [];
+        (tx.items || []).forEach(line => {
+          const have = remaining[line.itemId] ?? 0;
+          const alloc = Math.min(line.qty, have);
+          remaining[line.itemId] = have - alloc;
+          const short = line.qty - alloc;
+          if (short > 0) {
+            const nm = fixItemName(line.itemId, line.itemName);
+            shortages.push({ itemId: line.itemId, itemName: nm, qty: line.qty, short });
+            unitCount += short;
+            value += short * (line.unitPrice || 0);
+            if (!byItem[line.itemId]) byItem[line.itemId] = { itemId: line.itemId, name: nm, short: 0 };
+            byItem[line.itemId].short += short;
+          }
+        });
+        if (shortages.length) byInvoice[tx.id] = shortages;
+      });
+
+      return { remaining, byInvoice, byItem, orderCount: Object.keys(byInvoice).length, unitCount, value };
+    }
+
+    // Bagian keranjang saat ini yang akan menjadi Pre Order
+    function getCartPreorderLines() {
+      if (state.currentMode !== "OUT") return [];
+      const pre = computePreorderInfo();
+      const out = [];
+      state.cart.forEach(line => {
+        const free = pre.remaining[line.itemId] ?? 0;
+        const short = line.qty - free;
+        if (short > 0) out.push({ itemId: line.itemId, name: fixItemName(line.itemId, line.itemName), short });
+      });
+      return out;
+    }
+
+    /* =========================================================================
        AUTHENTICATION & ROLE-BASED ACCESS CONTROL (RBAC)
        ========================================================================= */
     function applyRolePermissions() {
@@ -952,7 +1048,7 @@
 
         cardValuationWrap.classList.remove("hidden");
         cardStockWrap.classList.remove("hidden");
-        kpiGrid.classList.add("lg:grid-cols-4");
+        kpiGrid.classList.add("lg:grid-cols-3");
         adminTools.forEach(el => { el.classList.remove("hidden"); el.style.display = "flex"; });
         txHeaderSubTitle.textContent = "Admin Mode: Hak verifikasi pembayaran, serah terima, restock masuk & edit log";
       } else {
@@ -968,7 +1064,7 @@
 
         cardValuationWrap.classList.add("hidden");
         cardStockWrap.classList.add("hidden");
-        kpiGrid.classList.remove("lg:grid-cols-4");
+        kpiGrid.classList.add("lg:grid-cols-3");
         adminTools.forEach(el => { el.style.display = "none"; });
 
         if (state.currentMode !== "OUT") {
@@ -1108,14 +1204,15 @@
 
           let stockBadge = "";
           if (item.currentStock <= 0) {
-            stockBadge = `<span class="px-1.5 py-0.5 rounded text-[10px] bg-rose-950/80 text-rose-400 border border-rose-800/80 font-mono">HABIS (0)</span>`;
+            stockBadge = `<span class="px-1.5 py-0.5 rounded text-[10px] bg-rose-950/80 text-rose-400 border border-rose-800/80 font-mono">HABIS (0)${state.currentMode === "OUT" ? " · PRE ORDER" : ""}</span>`;
           } else {
             stockBadge = `<span class="px-1.5 py-0.5 rounded text-[10px] bg-emerald-950/80 text-emerald-300 border border-emerald-800/80 font-mono">Stok: ${item.currentStock}</span>`;
           }
 
           itemRow.innerHTML = `
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 flex-wrap">
               <span class="font-medium text-slate-200">${escapeHtml(item.name)}</span>
+              ${ammoNote(item.id) ? `<span class="text-[10px] text-cyan-300/70">${escapeHtml(ammoNote(item.id))}</span>` : ""}
               ${item.tag ? `<span class="text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-1 rounded">${item.tag}</span>` : ""}
             </div>
             <div class="flex items-center gap-3">
@@ -1161,22 +1258,19 @@
         .filter(c => c.itemId === current.id)
         .reduce((sum, c) => sum + c.qty, 0);
 
-      const availableForCart = current.currentStock - (state.currentMode === "OUT" ? cartAllocated : 0);
+      const freeStock = computePreorderInfo().remaining[current.id] ?? 0;
+      const availableForCart = freeStock - (state.currentMode === "OUT" ? cartAllocated : 0);
 
       badge.classList.remove("hidden");
 
       if (state.currentMode === "OUT") {
-        if (current.currentStock <= 0) {
-          badge.className = "text-xs py-1.5 px-2.5 rounded-lg flex items-center justify-between bg-rose-950/80 text-rose-300 border border-rose-800";
-          text.textContent = "Stok Kosong! Tidak dapat dijual.";
-          num.textContent = "0 Unit";
-        } else if (availableForCart <= 0) {
-          badge.className = "text-xs py-1.5 px-2.5 rounded-lg flex items-center justify-between bg-amber-950/80 text-amber-300 border border-amber-800";
-          text.textContent = "Semua sisa stok sudah masuk ke keranjang.";
-          num.textContent = `0 dari ${current.currentStock} Unit Tersisa`;
+        if (availableForCart <= 0) {
+          badge.className = "text-xs py-1.5 px-2.5 rounded-lg flex items-center justify-between bg-orange-950/70 text-orange-300 border border-orange-800";
+          text.textContent = "Stok kosong / terpakai - tetap bisa dipesan sebagai PRE ORDER.";
+          num.textContent = `Gudang: ${current.currentStock} Unit`;
         } else {
           badge.className = "text-xs py-1.5 px-2.5 rounded-lg flex items-center justify-between bg-emerald-950/70 text-emerald-300 border border-emerald-800";
-          text.textContent = "Stok Tersedia:";
+          text.textContent = "Stok Tersedia (jumlah lebih dari ini = Pre Order):";
           num.textContent = `${availableForCart} Unit (Total Gudang: ${current.currentStock})`;
         }
       } else {
@@ -1205,25 +1299,6 @@
         return;
       }
 
-      const snapshot = calculateStockSnapshot();
-      const current = snapshot[state.selectedItem.id];
-
-      if (state.currentMode === "OUT") {
-        if (current.currentStock <= 0) {
-          showFeedback(`Stok ${current.name} HABIS! Tidak bisa ditambahkan ke penjualan.`, false);
-          return;
-        }
-
-        const currentInCart = state.cart
-          .filter(c => c.itemId === current.id)
-          .reduce((sum, c) => sum + c.qty, 0);
-
-        if ((currentInCart + qty) > current.currentStock) {
-          showFeedback(`Order ditolak! Jumlah (${currentInCart + qty}) melebihi stok yang tersedia (${current.currentStock} Unit)!`, false);
-          return;
-        }
-      }
-
       const existingLine = state.cart.find(c => c.itemId === state.selectedItem.id);
       if (existingLine) {
         existingLine.qty += qty;
@@ -1249,7 +1324,10 @@
 
       renderCart();
       validateCartStock();
-      showFeedback("Item berhasil ditambahkan ke keranjang transaksi.", true);
+      const poNow = getCartPreorderLines().find(x => x.itemId === addedItem.id);
+      showFeedback(poNow
+        ? `Item ditambahkan. Stok ${fixItemName(addedItem.id, addedItem.name)} kurang ${poNow.short} unit -> masuk PRE ORDER.`
+        : "Item berhasil ditambahkan ke keranjang transaksi.", true);
 
       // Senjata terjual -> tawarkan attachment yang compatible
       if (state.currentMode === "OUT" && addedItem.category === "Senjata") {
@@ -1274,9 +1352,11 @@
       return ids.map(id => snapshot[id]).filter(Boolean);
     }
 
+    // Stok bebas untuk item (setelah dikurangi order yang menunggu & isi keranjang)
     function attachAvailable(att) {
+      const free = computePreorderInfo().remaining[att.id] ?? 0;
       const inCart = state.cart.filter(c => c.itemId === att.id).reduce((sum, c) => sum + c.qty, 0);
-      return Math.max(0, att.currentStock - inCart);
+      return Math.max(0, free - inCart);
     }
 
     function hideAttachmentSuggestion() {
@@ -1285,28 +1365,59 @@
       if (panel) panel.classList.add("hidden");
     }
 
-    function buildSuggestRow(att, qty) {
-      const avail = attachAvailable(att);
-      const out = avail <= 0;
-      const row = document.createElement("label");
-      row.className = "flex items-center gap-2 px-2.5 py-1.5 rounded-lg border text-xs transition " +
-        (out ? "bg-black/20 border-slate-800 opacity-50 cursor-not-allowed" : "bg-[#18231c] border-emerald-900/60 hover:border-cyan-600/70 cursor-pointer");
+    function buildSuggestRow(item, qty) {
+      const avail = attachAvailable(item);
+      const note = ammoNote(item.id);
+      const row = document.createElement("div");
+      row.className = "flex items-center gap-2 px-2.5 py-1.5 rounded-lg border text-xs transition bg-[#18231c] " +
+        (avail <= 0 ? "border-orange-800/60" : "border-emerald-900/60 hover:border-cyan-600/70");
       row.innerHTML = `
-        <input type="checkbox" class="attach-check accent-cyan-500" data-id="${att.id}" ${out ? "disabled" : ""}>
+        <input type="checkbox" class="attach-check accent-cyan-500 shrink-0" data-id="${item.id}">
         <span class="flex-1 min-w-0">
-          <span class="text-slate-200 font-medium">${escapeHtml(att.name)}</span>
-          <span class="block text-[10px] font-mono ${out ? "text-rose-400" : "text-slate-500"}">${out ? "HABIS" : "Stok: " + avail}</span>
+          <span class="attach-name text-slate-200 font-medium cursor-pointer">${escapeHtml(item.name)}</span>
+          ${note ? `<span class="block text-[10px] text-cyan-300/80">${escapeHtml(note)}</span>` : ""}
+          <span class="attach-stock block text-[10px] font-mono"></span>
         </span>
-        <span class="font-mono text-emerald-400 font-semibold">${formatUSD(att.price)}</span>
-        <input type="number" min="1" max="${avail}" value="${Math.min(qty, Math.max(avail, 1))}" data-id="${att.id}" disabled
-          class="attach-qty w-14 bg-black/30 border border-emerald-900/70 rounded px-1.5 py-1 text-xs font-mono text-center text-slate-100 focus:outline-none focus:border-cyan-500 disabled:opacity-40">
+        <span class="font-mono text-emerald-400 font-semibold whitespace-nowrap">${formatUSD(item.price)}</span>
+        <input type="number" min="1" value="${qty}" data-id="${item.id}" title="Jumlah"
+          class="attach-qty w-16 bg-black/30 border border-emerald-900/70 rounded px-1.5 py-1 text-xs font-mono text-center text-slate-100 focus:outline-none focus:border-cyan-500">
       `;
       const chk = row.querySelector(".attach-check");
       const qtyInput = row.querySelector(".attach-qty");
+      const stockEl = row.querySelector(".attach-stock");
+
+      const refresh = () => {
+        const q = parseInt(qtyInput.value, 10);
+        const want = isNaN(q) ? 0 : q;
+        if (avail <= 0) {
+          stockEl.className = "attach-stock block text-[10px] font-mono text-orange-300";
+          stockEl.textContent = want > 0 ? `Stok kosong - ${want} unit masuk PRE ORDER` : "Stok kosong - masuk PRE ORDER";
+        } else if (want > avail) {
+          stockEl.className = "attach-stock block text-[10px] font-mono text-orange-300";
+          stockEl.textContent = `Stok ${avail} - ${want - avail} unit masuk PRE ORDER`;
+        } else {
+          stockEl.className = "attach-stock block text-[10px] font-mono text-slate-500";
+          stockEl.textContent = "Stok: " + avail;
+        }
+      };
+
       chk.addEventListener("change", () => {
-        qtyInput.disabled = !chk.checked;
+        if (chk.checked && (!qtyInput.value || parseInt(qtyInput.value, 10) <= 0)) qtyInput.value = 1;
+        refresh();
         updateAttachAddButton();
       });
+      row.querySelector(".attach-name").addEventListener("click", () => {
+        chk.checked = !chk.checked;
+        chk.dispatchEvent(new Event("change"));
+      });
+      qtyInput.addEventListener("input", () => {
+        const q = parseInt(qtyInput.value, 10);
+        chk.checked = !isNaN(q) && q > 0;   // mengisi jumlah otomatis mencentang item
+        refresh();
+        updateAttachAddButton();
+      });
+
+      refresh();
       return row;
     }
 
@@ -1324,13 +1435,13 @@
       const addGroup = (title, list) => {
         if (list.length === 0) return;
         const h = document.createElement("div");
-        h.className = "text-[10px] font-bold text-slate-400 uppercase tracking-wider pt-1";
-        h.textContent = title;
+        h.className = "flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-wider pt-1";
+        h.innerHTML = `<span>${title}</span><span class="font-normal normal-case text-slate-500">Jumlah</span>`;
         box.appendChild(h);
         list.forEach(it => box.appendChild(buildSuggestRow(it, qty)));
       };
       addGroup("Attachment", attList);
-      addGroup("Ammo", ammoList);
+      addGroup("Ammo - isi jumlah yang ingin dibeli", ammoList);
 
       updateAttachAddButton();
       document.getElementById("attachSuggestPanel").classList.remove("hidden");
@@ -1340,13 +1451,14 @@
       const n = document.querySelectorAll("#attachSuggestList .attach-check:checked").length;
       const btn = document.getElementById("btnAttachAdd");
       btn.disabled = n === 0;
-      btn.textContent = n === 0 ? "Pilih item di atas" : `Tambahkan ${n} Item ke Faktur`;
+      btn.textContent = n === 0 ? "Pilih item atau isi jumlah di atas" : `Tambahkan ${n} Item ke Faktur`;
     }
 
     function addSelectedAttachments() {
       const snapshot = calculateStockSnapshot();
       const checks = document.querySelectorAll("#attachSuggestList .attach-check:checked");
       let added = 0;
+      let poItems = 0;
       const errors = [];
 
       checks.forEach(chk => {
@@ -1356,8 +1468,7 @@
         const q = parseInt(qtyInput.value, 10);
         if (!att || isNaN(q) || q <= 0) { errors.push(`${att ? att.name : id}: jumlah tidak valid`); return; }
 
-        const avail = attachAvailable(att);
-        if (q > avail) { errors.push(`${att.name}: stok tersisa ${avail}`); return; }
+        if (q > attachAvailable(att)) poItems++;
 
         const existing = state.cart.find(c => c.itemId === id);
         if (existing) {
@@ -1380,7 +1491,7 @@
         showFeedback("Sebagian tidak ditambahkan -> " + errors.join("; "), false);
         if (added === 0) return;
       } else {
-        showFeedback(`${added} item (attachment/ammo) berhasil ditambahkan ke faktur.`, true);
+        showFeedback(`${added} item (attachment/ammo) ditambahkan ke faktur.` + (poItems ? ` ${poItems} item stok kurang/kosong -> masuk PRE ORDER.` : ""), true);
       }
 
       hideAttachmentSuggestion();
@@ -1423,24 +1534,32 @@
       let totalQty = 0;
       let grandTotal = 0;
       const snapshot = calculateStockSnapshot();
+      const preInfo = computePreorderInfo();
+      let poUnits = 0;
 
       state.cart.forEach((line, index) => {
         totalQty += line.qty;
         grandTotal += line.subtotal;
 
         const currentStock = snapshot[line.itemId]?.currentStock ?? 0;
-        const isExceeded = state.currentMode === "OUT" && (line.qty > currentStock);
+        const poShort = state.currentMode === "OUT" ? Math.max(0, line.qty - (preInfo.remaining[line.itemId] ?? 0)) : 0;
+        const isExceeded = poShort > 0;
+        poUnits += poShort;
+        const noteTxt = ammoNote(line.itemId);
 
         const tr = document.createElement("tr");
-        tr.className = `border-b border-emerald-950/50 hover:bg-black/30 text-slate-300 transition ${isExceeded ? 'bg-rose-950/40 text-rose-300' : ''}`;
+        tr.className = `border-b border-emerald-950/50 hover:bg-black/30 text-slate-300 transition ${isExceeded ? 'bg-orange-950/30' : ''}`;
 
         tr.innerHTML = `
           <td class="py-2 px-2.5">
             <div class="font-medium text-slate-200 text-xs">${escapeHtml(fixItemName(line.itemId, line.itemName))}</div>
-            <div class="text-[10px] text-slate-500 font-mono">Stok Gudang: ${currentStock} Unit</div>
+            ${noteTxt ? `<div class="text-[10px] text-cyan-300/70">${escapeHtml(noteTxt)}</div>` : ""}
+            <div class="text-[10px] text-slate-500 font-mono">Stok Gudang: ${currentStock} Unit
+              ${isExceeded ? `<span class="ml-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-500/15 text-orange-300 border border-orange-500/40">PRE ORDER ${poShort} unit</span>` : ""}
+            </div>
           </td>
           <td class="py-2 px-1.5 text-right font-mono text-xs">${formatUSD(line.unitPrice)}</td>
-          <td class="py-2 px-1.5 text-center font-mono font-bold ${isExceeded ? 'text-rose-400' : 'text-slate-100'}">${line.qty}</td>
+          <td class="py-2 px-1.5 text-center font-mono font-bold ${isExceeded ? 'text-orange-300' : 'text-slate-100'}">${line.qty}</td>
           <td class="py-2 px-2 text-right font-mono font-semibold text-emerald-400 text-xs">${formatUSD(line.subtotal)}</td>
           <td class="py-2 px-1.5 text-center">
             <button type="button" onclick="removeCartItem(${index})" class="text-slate-500 hover:text-rose-400 p-1 rounded transition">
@@ -1451,7 +1570,7 @@
         tbody.appendChild(tr);
       });
 
-      summaryText.textContent = `${totalQty} unit total dalam faktur ini`;
+      summaryText.textContent = `${totalQty} unit total dalam faktur ini` + (poUnits > 0 ? ` · ${poUnits} unit Pre Order` : "");
       grandTotalElem.textContent = formatUSD(grandTotal);
       validateCartStock();
     }
@@ -1459,7 +1578,9 @@
     function validateCartStock() {
       const submitBtn = document.getElementById("btnSubmitOrder");
       const alertBox = document.getElementById("strictStockAlert");
+      const alertTitle = document.getElementById("strictStockAlertTitle");
       const alertDesc = document.getElementById("strictStockAlertDesc");
+      const submitLabel = document.getElementById("btnSubmitOrderLabel");
 
       if (state.cart.length === 0) {
         submitBtn.disabled = true;
@@ -1468,33 +1589,23 @@
         return false;
       }
 
-      if (state.currentMode === "OUT") {
-        const snapshot = calculateStockSnapshot();
-        const overLimitItems = [];
+      const poLines = getCartPreorderLines();
 
-        state.cart.forEach(line => {
-          const avail = snapshot[line.itemId]?.currentStock ?? 0;
-          if (line.qty > avail || avail <= 0) {
-            overLimitItems.push(`${line.itemName} (Order: ${line.qty}, Stok: ${avail})`);
-          }
-        });
-
-        if (overLimitItems.length > 0) {
-          alertDesc.textContent = `Pembelian tidak bisa dilanjutkan karena stok tidak mencukupi / habis pada item: ${overLimitItems.join(", ")}. Kurangi kuantiti atau batalkan item sebelum memproses.`;
-          alertBox.classList.remove("hidden");
-
-          submitBtn.disabled = true;
-          submitBtn.className = "w-full py-3 px-4 bg-rose-950/60 border border-rose-800 text-rose-400 text-xs font-bold uppercase tracking-wider rounded-xl transition flex items-center justify-center gap-2 cursor-not-allowed opacity-80";
-          return false;
-        }
+      if (poLines.length > 0) {
+        alertBox.className = "p-3 rounded-lg bg-orange-950/70 border border-orange-700/70 text-orange-200 text-xs flex items-start gap-2 shadow-lg";
+        alertTitle.textContent = "Termasuk PRE ORDER";
+        alertDesc.textContent = `Stok kosong / kurang pada: ${poLines.map(x => `${x.name} (kurang ${x.short})`).join(", ")}. Order tetap bisa diproses - bagian yang kurang dihitung sebagai Pre Order dan baru bisa diserahkan setelah ada restock.`;
+      } else {
+        alertBox.classList.add("hidden");
       }
 
-      alertBox.classList.add("hidden");
       submitBtn.disabled = false;
       if (state.currentMode === "OUT") {
         submitBtn.className = "w-full py-3 px-4 bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-lg hover:shadow-rose-950/50 transition flex items-center justify-center gap-2 cursor-pointer";
+        if (submitLabel) submitLabel.textContent = poLines.length > 0 ? "Proses Transaksi (Termasuk Pre Order)" : "Proses Transaksi Penjualan";
       } else {
         submitBtn.className = "w-full py-3 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-lg hover:shadow-emerald-950/50 transition flex items-center justify-center gap-2 cursor-pointer";
+        if (submitLabel) submitLabel.textContent = "Proses Transaksi Restock";
       }
       return true;
     }
@@ -1517,6 +1628,8 @@
 
       // Status inisial: OUT -> PENDING (Menunggu Pembayaran), IN -> COMPLETED
       const initialStatus = (state.currentMode === "OUT") ? "PENDING" : "COMPLETED";
+
+      const poLinesForMsg = getCartPreorderLines();
 
       const invoice = {
         id: "INV-" + Date.now().toString(36).toUpperCase(),
@@ -1541,7 +1654,8 @@
       updatePickerStatus();
 
       if (invoice.type === "OUT") {
-        showFeedback(`Order ${invoice.id} berhasil diajukan ke log! Menunggu verifikasi Admin (Stok belum terpotong).`, true);
+        showFeedback(`Order ${invoice.id} berhasil diajukan ke log! Menunggu verifikasi Admin (Stok belum terpotong).` +
+          (poLinesForMsg.length ? ` PRE ORDER: ${poLinesForMsg.map(x => `${x.name} ×${x.short}`).join(", ")}.` : ""), true);
       } else {
         showFeedback(`Restock ${invoice.id} berhasil dicatat & stok bertambah.`, true);
       }
@@ -1621,7 +1735,7 @@
       });
 
       if (lackingItems.length > 0) {
-        showFeedback(`Gagal menyerahkan barang! Stok gudang saat ini tidak cukup: ${lackingItems.join(", ")}`, false);
+        showFeedback(`Belum bisa diserahkan (Pre Order - tunggu restock). Stok gudang saat ini tidak cukup: ${lackingItems.join(", ")}`, false);
         return;
       }
 
@@ -1680,8 +1794,17 @@
       document.getElementById("cardTotalInflowVal").textContent = `Restock: ${formatUSD(totalInVal)}`;
 
       // Card Nominal Pendapatan Penjualan
-      document.getElementById("cardTotalOutflowVal").textContent = formatUSD(totalRevenueDeliveredVal);
+      document.getElementById("cardSalesMini").textContent = `Total penjualan: ${formatUSD(totalRevenueDeliveredVal)}`;
       document.getElementById("cardTotalOutflow").textContent = `${totalDeliveredUnits.toLocaleString("en-US")} Unit Telah Diserahkan`;
+
+      // Pre Order
+      const pre = computePreorderInfo();
+      document.getElementById("cardPreorderUnits").textContent = `${pre.unitCount.toLocaleString("en-US")} Unit`;
+      document.getElementById("cardPreorderSub").textContent = `${pre.orderCount} order menunggu stok · ${formatUSD(pre.value)}`;
+      const topItems = Object.values(pre.byItem).sort((a, b) => b.short - a.short);
+      document.getElementById("cardPreorderItems").textContent = topItems.length === 0
+        ? "Tidak ada pre order"
+        : topItems.slice(0, 3).map(x => `${x.name} ×${x.short}`).join(", ") + (topItems.length > 3 ? ` +${topItems.length - 3} lainnya` : "");
 
       renderInventoryTable(inventoryList);
       renderTransactionHistory();
@@ -1806,6 +1929,7 @@
             <span class="cursor-pointer hover:text-emerald-400 font-semibold" onclick="quickSelectFromTable('${item.id}')">${escapeHtml(item.name)}</span>
             ${tagBadge}
             ${stockBadge}
+            ${ammoNote(item.id) ? `<div class="text-[10px] text-cyan-300/70 font-normal mt-0.5">${escapeHtml(ammoNote(item.id))}</div>` : ""}
           </td>
           <td class="py-2.5 px-2 text-slate-400 font-mono text-[11px]">${item.category}</td>
           <td class="py-2.5 px-2 text-right font-mono text-slate-400">${item.initialStock}</td>
@@ -1831,6 +1955,7 @@
       empty.classList.add("hidden");
 
       const sorted = [...state.transactions].reverse();
+      const preInfoHist = computePreorderInfo();
 
       sorted.forEach(tx => {
         const tr = document.createElement("tr");
@@ -1870,11 +1995,19 @@
           `;
         }
 
+        const poShort = preInfoHist.byInvoice[tx.id] || null;
+        if (poShort) {
+          statusBadgeHtml += `
+            <div class="mt-1"><span class="inline-block px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-500/15 text-orange-300 border border-orange-500/40 font-mono">PRE ORDER</span></div>
+            <div class="text-[9px] text-orange-300/80 mt-0.5 max-w-[160px] mx-auto whitespace-normal">Menunggu restock: ${poShort.map(x => `${escapeHtml(x.itemName)} ×${x.short}`).join(", ")}</div>
+          `;
+        }
+
         let itemsHtml = "";
         if (Array.isArray(tx.items)) {
           itemsHtml = tx.items.map(i => `
             <div class="flex items-center justify-between text-xs py-0.5">
-              <span class="text-slate-200"><span class="font-mono text-emerald-400 font-semibold">${i.qty}x</span> ${escapeHtml(fixItemName(i.itemId, i.itemName))}</span>
+              <span class="text-slate-200"><span class="font-mono text-emerald-400 font-semibold">${i.qty}x</span> ${escapeHtml(fixItemName(i.itemId, i.itemName))}${(() => { const sh = poShort && poShort.find(x => x.itemId === i.itemId); return sh ? ` <span class="ml-1 px-1 rounded text-[9px] font-bold bg-orange-500/15 text-orange-300 border border-orange-500/40">PO ×${sh.short}</span>` : ""; })()}</span>
               <span class="font-mono text-slate-400 text-[11px]">${formatUSD(i.subtotal)}</span>
             </div>
           `).join("");
@@ -2105,8 +2238,11 @@
     function renderCashPanel() {
       const { revenue, handed, balance } = getCashSummary();
 
-      const mini = document.getElementById("cardCashBalanceMini");
-      if (mini) mini.textContent = `Saldo kas: ${formatUSD(balance)}`;
+      const bigBal = document.getElementById("cardCashBalanceBig");
+      if (bigBal) {
+        bigBal.textContent = formatUSD(balance);
+        bigBal.className = "text-2xl font-bold font-mono mt-1 " + (balance < 0 ? "text-rose-400" : "text-amber-400");
+      }
 
       document.getElementById("cashTotalRevenue").textContent = formatUSD(revenue);
       document.getElementById("cashTotalHandover").textContent = formatUSD(handed);
