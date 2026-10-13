@@ -244,7 +244,7 @@ function checkLocal() {
     const raw = localStorage.getItem(k);
     if (lastRaw[k] !== raw) { lastRaw[k] = raw; COLS.filter(c => c.ls === k).forEach(c => schedulePush(c)); }
   });
-  if (anyLocalAdmin() && !isAdmin && !loginShown && window.OPJ_ready) { loginShown = true; showLogin("Mode admin lokal terdeteksi. Login admin online agar perubahan tersimpan ke database."); }
+  // Dialog login admin online TIDAK muncul otomatis; hanya lewat tombol ☁ di bar atas.
 }
 window.addEventListener("storage", checkLocal);
 setInterval(checkLocal, 1500);
@@ -349,7 +349,6 @@ function reloadWeaponStoreIfIdle() {
     fatal = e.code || "error"; console.warn("[sync] start", e); ui(); fireReady();
   }
   ui();
-  setTimeout(() => { window.OPJ_ready = true; }, 3000);   // dialog login otomatis baru muncul setelah halaman stabil
   setTimeout(() => { if (!readyFired) { fireReady(); } }, 4500);
 })();
 
